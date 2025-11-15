@@ -8,7 +8,12 @@ module state_machine_tb;
     state_machine state_machine(
         .clock(clock),
         .reset(reset),
-        .bist_start(bist_start)
+        .bist_start(bist_start),
+        .mode(mode),
+        .bist_end(bist_end),
+        .init(init),
+        .running(running),
+        .finish(finish)
     );
 
     initial begin
@@ -24,6 +29,7 @@ module state_machine_tb;
         begin
         #100 reset = 0;
         #100 bist_start = 1;
+        #200 $finish;
         end
 
 endmodule
