@@ -1,0 +1,121 @@
+module state_machine(clock, reset, bist_start, mode, bist_end, init, running, finish);
+input clock, reset, bist_start;
+output mode, bist_end, init, running, finish;
+
+// Registers containing the current and next state
+reg [2:0] state, next_state;
+
+// Parameters identifying states
+localparam [2:0] S0=0, S1=1, S2=2, S3=3, S4=4, S5=5;
+
+// Parameters N and M defining the output sequence
+parameter N = 7;
+parameter M = 10;
+
+// Calculate required register sizes to contain the number of iterations conducted.
+parameter N_SIZE = $clog2(N + 1);
+parameter M_SIZE = $clog2(N + 1);
+
+// Declaration of registers keeping track of iterations producting hte output sequence.
+reg [N_SIZE:0] cnt_n;
+reg [M_SIZE:0] cnt_m;
+
+// Process the next state
+always @(*)
+begin
+    case (state)
+    S0: begin
+        cnt_n = 0;
+        cnt_m = 0;
+        if (bist_start) next_state = S1;
+        else next_state = S0;
+        end
+    S1: next_state = S2;
+    S2: if (cnt_n >= N) next_state = S3;
+        else begin
+        next_state = S2;
+        cnt_n = cnt_n + 1;
+        end
+    S3: if (cnt_m >= M) next_state = S4;
+        else begin
+        next_state = S2;
+        cnt_m = cnt_m + 1;
+        cnt_n = 0;
+        end
+    S4: next_state = S5;
+    S5: if (bist_start == 1) begin
+        next_state = S1;
+        cnt_m = 0;
+        cnt_n = 0;
+        end
+        else next_state = S5;
+
+endcase
+end
+
+// Set the next state to S0 if reset is HIGH
+always @(posedge clock)
+    begin
+        if (reset == 1'b1)
+        state <= S0;
+        else
+        state <= next_state;
+end
+
+// Set output depending on state
+always @(state) begin
+    case (state)
+        S0: begin
+        mode = 0;
+        bist_end = 0;
+        init = 0;
+        running = 0;
+        finish = 0;
+        end
+
+        S1: begin
+        mode = 0;
+        bist_end = 0;
+        init = 1;
+        running = 0;
+        finish = 0;
+        end
+
+        S2: begin
+        mode = 1;
+        bist_end = 0;
+        init = 0;
+        running = 1;
+        finish = 0;
+        end
+
+        S3: begin
+        mode = 0;
+        bist_end = 0;
+        init = 0;
+        running = 1;
+        finish = 0;
+        end
+
+        S4: begin
+        mode = 0;
+        bist_end = 0;
+        init = 0;
+        running = 0;
+        finish = 1;
+        end
+
+        S5: begin
+        mode = 0;
+        bist_end = 1;
+        init = 0;
+        running = 0;
+        finish = 0;
+        end
+    endcase
+end
+
+
+
+endmodule
+
