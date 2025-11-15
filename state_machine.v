@@ -1,6 +1,6 @@
 module state_machine(clock, reset, bist_start, mode, bist_end, init, running, finish);
 input clock, reset, bist_start;
-output mode, bist_end, init, running, finish;
+output reg mode, bist_end, init, running, finish;
 
 // Registers containing the current and next state
 reg [2:0] state, next_state;
@@ -63,59 +63,57 @@ always @(posedge clock)
 end
 
 // Set output depending on state
-always @(state) begin
+  always @(posedge clock) begin
     case (state)
         S0: begin
-        mode = 0;
-        bist_end = 0;
-        init = 0;
-        running = 0;
-        finish = 0;
+        mode <= 0;
+        bist_end <= 0;
+        init <= 0;
+        running <= 0;
+        finish <= 0;
         end
 
         S1: begin
-        mode = 0;
-        bist_end = 0;
-        init = 1;
-        running = 0;
-        finish = 0;
+        mode <= 0;
+        bist_end <= 0;
+        init <= 1;
+        running <= 0;
+        finish <= 0;
         end
 
         S2: begin
-        mode = 1;
-        bist_end = 0;
-        init = 0;
-        running = 1;
-        finish = 0;
+        mode <= 1;
+        bist_end <= 0;
+        init <= 0;
+        running <= 1;
+        finish <= 0;
         end
 
         S3: begin
-        mode = 0;
-        bist_end = 0;
-        init = 0;
-        running = 1;
-        finish = 0;
+        mode <= 0;
+        bist_end <= 0;
+        init <= 0;
+        running <= 1;
+        finish <= 0;
         end
 
         S4: begin
-        mode = 0;
-        bist_end = 0;
-        init = 0;
-        running = 0;
-        finish = 1;
+        mode <= 0;
+        bist_end <= 0;
+        init <= 0;
+        running <= 0;
+        finish <= 1;
         end
 
         S5: begin
-        mode = 0;
-        bist_end = 1;
-        init = 0;
-        running = 0;
-        finish = 0;
+        mode <= 0;
+        bist_end <= 1;
+        init <= 0;
+        running <= 0;
+        finish <= 0;
         end
     endcase
 end
-
-
 
 endmodule
 
