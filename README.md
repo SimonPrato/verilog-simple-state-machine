@@ -28,4 +28,8 @@ The outputs in each state behave according to the table below.
 |   $S_4$ |   0    |  0  |      0    |    1 |        0|
  |  $S_5$|    0     | 0 |       0     |   0|         1|
 
+## Simulation
+
+Simulations have been conducted with [EDA Playground](https://edaplayground.com).
+![waveforms of simulation](Images/waveforms.png)
 
