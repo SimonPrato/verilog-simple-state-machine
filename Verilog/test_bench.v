@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+$dumpfile("dump.vcd"); $dumpvars;
+
 module state_machine_tb;
 
     reg clock, reset, bist_start;
