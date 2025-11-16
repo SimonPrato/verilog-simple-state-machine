@@ -17,7 +17,7 @@ module state_machine_tb;
     );
 
     initial begin
-		$dumpfile("dump.vcd"); $dumpvars;
+	$dumpfile("dump.vcd"); $dumpvars;
         clock = 0;
         reset = 1;
         bist_start = 0;
@@ -30,7 +30,10 @@ module state_machine_tb;
         begin
         #100 reset = 0;
         #100 bist_start = 1;
-        #10000 $finish;
+	#2550 bist_start = 0;
+	#100 bist_start = 1;
+	#1200 reset = 1;
+        #200 $finish;
         end
 
 endmodule
