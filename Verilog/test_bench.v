@@ -30,7 +30,7 @@ module state_machine_tb;
         begin
         #100 reset = 0;
         #100 bist_start = 1;
-        #200 $finish;
+        #10000 $finish;
         end
 
 endmodule

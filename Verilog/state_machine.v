@@ -20,35 +20,44 @@ parameter M_SIZE = $clog2(N + 1);
 reg [N_SIZE:0] cnt_n;
 reg [M_SIZE:0] cnt_m;
 
+// Register to keep track of the bist_start value one clock cycle ago.
+reg prev_bist_start;
+
 // Process the next state
-always @(*)
+always @(clock, state)
 begin
     case (state)
     S0: begin
         cnt_n = 0;
         cnt_m = 0;
-        if (bist_start) next_state = S1;
+        if (bist_start && !prev_bist_start) next_state = S1;
         else next_state = S0;
         end
     S1: next_state = S2;
-    S2: if (cnt_n >= N) next_state = S3;
+    S2: begin 
+	if (cnt_n >= N) next_state = S3;
         else begin
         next_state = S2;
         cnt_n = cnt_n + 1;
         end
-    S3: if (cnt_m >= M) next_state = S4;
+	end
+    S3: begin
+	if (cnt_m >= M) next_state = S4;
         else begin
         next_state = S2;
         cnt_m = cnt_m + 1;
         cnt_n = 0;
-        end
+	end
+	end
     S4: next_state = S5;
-    S5: if (bist_start == 1) begin
+    S5: begin
+	if (bist_start && !prev_bist_start) begin
         next_state = S1;
         cnt_m = 0;
         cnt_n = 0;
         end
         else next_state = S5;
+	end
 
 endcase
 end
@@ -64,6 +73,7 @@ end
 
 // Set output depending on state
   always @(posedge clock) begin
+    prev_bist_start <= bist_start;
     case (state)
         S0: begin
         mode <= 0;
