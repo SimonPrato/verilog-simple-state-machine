@@ -12,7 +12,7 @@ A simple state machine is implemented. It is represented by the controller in th
 
 ![controller](Images/controller.png)
 
-It can reach six states. Only two internal registers are used, $\mathrm{cnt\_n}$ and $\mathrm{cnt\_m}$. They are used to iterate between the states $S_2$ and $S_3$. The user sets the number of iterations by configuring the parameters N and M in the Verilog code of the design.
+It can reach six states. Only two internal registers are used, cnt_n and cnt_m. They are used to iterate between the states $S_2$ and $S_3$. The user sets the number of iterations by configuring the parameters N and M in the Verilog code of the design.
 
 ![State Diagram](Images/state_diagram.png)
 
