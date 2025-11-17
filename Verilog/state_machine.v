@@ -24,8 +24,8 @@ reg [M_SIZE:0] cnt_m;
 reg prev_bist_start;
 
 // Process the next state
-always @(clock, state)
-begin
+always @(*)
+    begin
     case (state)
     S0: begin
         cnt_n = 0;
@@ -35,10 +35,9 @@ begin
         end
     S1: next_state = S2;
     S2: begin 
-	if (cnt_n >= N) next_state = S3;
+	if (cnt_n >= N-1) next_state = S3;
         else begin
         next_state = S2;
-        cnt_n = cnt_n + 1;
         end
 	end
     S3: begin
@@ -65,6 +64,9 @@ end
 // Set the next state to S0 if reset is HIGH
 always @(posedge clock)
     begin
+    prev_bist_start <= bist_start;
+    if (state == S2) 
+    cnt_n = cnt_n + 1;
         if (reset == 1'b1)
         state <= S0;
         else
@@ -72,8 +74,7 @@ always @(posedge clock)
 end
 
 // Set output depending on state
-  always @(posedge clock) begin
-    prev_bist_start <= bist_start;
+  always @(state) begin
     case (state)
         S0: begin
         mode <= 0;
