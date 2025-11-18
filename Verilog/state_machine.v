@@ -16,7 +16,7 @@ parameter M = 10;
 
 // Calculate required register sizes to contain the number of iterations conducted.
 parameter N_SIZE = $clog2(N + 1);
-parameter M_SIZE = $clog2(N + 1);
+parameter M_SIZE = $clog2(M + 1);
 
 // Declaration of registers keeping track of iterations producting hte output sequence.
 reg [N_SIZE:0] cnt_n;
@@ -30,11 +30,12 @@ always @(posedge clock) begin
     if (reset == 1) begin
         cnt_n <= 0;
         cnt_m <= 0;
-    else if (cnt_n >= N - 1) begin
+    end
+    else if (cnt_n > N - 1) begin
         cnt_n <= 0;
         cnt_m <= cnt_m + 1;
     end
-    else if (cnt_m >= M) begin
+    else if (cnt_m > M) begin
         cnt_m <= 0;
         cnt_n <= 0;
     end
@@ -44,6 +45,7 @@ always @(posedge clock) begin
     else begin
         cnt_n <= cnt_n;
         cnt_m <= cnt_m;
+    end
 end
 
 // Process the next state
@@ -56,13 +58,13 @@ always @(*)
         end
     S1: next_state = S2;
     S2: begin 
-	if (cnt_n >= N-1) next_state = S3;
+	if (cnt_n > N-1) next_state = S3;
         else begin
         next_state = S2;
         end
 	end
     S3: begin
-	if (cnt_m >= M) next_state = S4;
+	if (cnt_m > M) next_state = S4;
         else begin
         next_state = S2;
 	end
@@ -82,11 +84,9 @@ end
 always @(posedge clock)
     begin
     prev_bist_start <= bist_start;
-    if (state == S2) 
-    cnt_n = cnt_n + 1;
-        if (reset == 1'b1)
+    if (reset == 1'b1)
         state <= S0;
-        else
+    else
         state <= next_state;
 end
 
