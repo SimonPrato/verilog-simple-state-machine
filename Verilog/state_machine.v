@@ -27,23 +27,23 @@ reg prev_bist_start;
 
 // Implement counters for cnt_n and cnt_m
 always @(posedge clock) begin
-    if (state == S0) begin
+    if (reset == 1) begin
         cnt_n <= 0;
         cnt_m <= 0;
-    else if (state == S2) begin
+    else if (cnt_n >= N - 1) begin
+        cnt_n <= 0;
+        cnt_m <= cnt_m + 1;
+    end
+    else if (cnt_m >= M) begin
+        cnt_m <= 0;
+        cnt_n <= 0;
+    end
+    else if (next_state == S2) begin
         cnt_n <= cnt_n + 1;
     end
-    else if (state == S3) begin
-        cnt_m <= cnt_m + 1;
-        cnt_n <= 0;
-    end
-    else if (state == S4) begin
-        cnt_m <= 0;
-        cnt_n <= 0;
-    else if (state == S5) begin
-        cnt_m <= 0;
-        cnt_n <= 0;
-    end
+    else begin
+        cnt_n <= cnt_n;
+        cnt_m <= cnt_m;
 end
 
 // Process the next state
