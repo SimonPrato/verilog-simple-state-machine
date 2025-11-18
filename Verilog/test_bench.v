@@ -5,7 +5,7 @@ module state_machine_tb;
     reg clock, reset, bist_start;
     wire mode, bist_end, init, running, finish;
 
-    state_machine state_machine(
+    state_machine uut(
         .clock(clock),
         .reset(reset),
         .bist_start(bist_start),
@@ -26,11 +26,30 @@ module state_machine_tb;
     always
         #50 clock = !clock;
 
+	// One sequence takes 9 µs
     initial
         begin
+	// Sequence one
         #100 reset = 0;
         #100 bist_start = 1;
-        #10200 $finish;
+
+	// Sequence two
+	#9700 bist_start = 0;
+	#100 bist_start = 1;
+	#200 bist_start = 0;
+	#200 bist_start = 1;
+	#100 reset = 1;
+
+	// Sequence three
+	#100 bist_start = 0;
+	#100 bist_start = 1;
+	#100 reset = 0;
+	#200 bist_start = 0;
+	#200 bist_start = 1;
+	#100 reset = 1;
+
+	// Finish
+        #300  $finish;
         end
 
 endmodule

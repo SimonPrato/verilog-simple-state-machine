@@ -25,13 +25,32 @@ reg [M_SIZE:0] cnt_m;
 // Register to keep track of the bist_start value one clock cycle ago.
 reg prev_bist_start;
 
+// Implement counters for cnt_n and cnt_m
+always @(posedge clock) begin
+    if (state == S0) begin
+        cnt_n <= 0;
+        cnt_m <= 0;
+    else if (state == S2) begin
+        cnt_n <= cnt_n + 1;
+    end
+    else if (state == S3) begin
+        cnt_m <= cnt_m + 1;
+        cnt_n <= 0;
+    end
+    else if (state == S4) begin
+        cnt_m <= 0;
+        cnt_n <= 0;
+    else if (state == S5) begin
+        cnt_m <= 0;
+        cnt_n <= 0;
+    end
+end
+
 // Process the next state
 always @(*)
     begin
     case (state)
     S0: begin
-        cnt_n = 0;
-        cnt_m = 0;
         if (bist_start && !prev_bist_start) next_state = S1;
         else next_state = S0;
         end
@@ -46,16 +65,12 @@ always @(*)
 	if (cnt_m >= M) next_state = S4;
         else begin
         next_state = S2;
-        cnt_m = cnt_m + 1;
-        cnt_n = 0;
 	end
 	end
     S4: next_state = S5;
     S5: begin
 	if (bist_start && !prev_bist_start) begin
         next_state = S1;
-        cnt_m = 0;
-        cnt_n = 0;
         end
         else next_state = S5;
 	end
