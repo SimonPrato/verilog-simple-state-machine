@@ -76,6 +76,9 @@ always @(*)
         end
         else next_state = S5;
 	end
+    default: begin
+        next_state = S0;
+    end
 
 endcase
 end
@@ -136,6 +139,13 @@ end
         S5: begin
         mode <= 0;
         bist_end <= 1;
+        init <= 0;
+        running <= 0;
+        finish <= 0;
+        end
+        default: begin
+        mode <= 0;
+        bist_end <= 0;
         init <= 0;
         running <= 0;
         finish <= 0;
