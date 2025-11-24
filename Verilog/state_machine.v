@@ -51,31 +51,38 @@ end
 // Process the next state
 always @(*)
     begin
+
     case (state)
     S0: begin
         if (bist_start && !prev_bist_start) next_state = S1;
         else next_state = S0;
         end
+
     S1: next_state = S2;
+
     S2: begin 
 	if (cnt_n > N-1) next_state = S3;
         else begin
         next_state = S2;
         end
 	end
+
     S3: begin
 	if (cnt_m > M) next_state = S4;
         else begin
         next_state = S2;
 	end
 	end
+
     S4: next_state = S5;
+
     S5: begin
 	if (bist_start && !prev_bist_start) begin
         next_state = S1;
         end
         else next_state = S5;
 	end
+
     default: begin
         next_state = S0;
     end
@@ -143,6 +150,7 @@ end
         running <= 0;
         finish <= 0;
         end
+
         default: begin
         mode <= 0;
         bist_end <= 0;
