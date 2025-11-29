@@ -12,7 +12,9 @@ A simple state machine is implemented. It is represented by the controller in th
 
 ![controller](Images/controller.png)
 
-It can reach six states. Only two internal registers are used, cnt_n and cnt_m. They are used to iterate between the states $S_2$ and $S_3$. The user sets the number of iterations by configuring the parameters N and M in the Verilog code of the design.
+The state machine module contains three registers. The first register \textit{cnt\_n} is responsible for keeping track of how many clock periods have passed. In the state $S_2$, it is repeatedly compared with the user-defined number of clock cycles, N. The second register \textit{cnt\_m} indicates how often the sequence occurred in the output. It enables a repetition of the sequence until the user-defined variable M is reached. The last register \textit{prev\_bist\_start} stores the \textit{bist\_start} value of the previous clock cycle, to enable a detection of a logic level transition. 
+
+By setting the input \textit{reset} to 1, the state $S_0$ will always be reached at the next rising edge of the clock. It has priority over all other input variables. Every input signal is read at the rising edge of the clock signal, i.e. they are synchronous. 
 
 ![State Diagram](Images/state_diagram.png)
 
