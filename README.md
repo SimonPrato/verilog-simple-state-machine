@@ -145,7 +145,3 @@ state_machine #(
 - Edge detection on `bist_start` prevents false re-triggering
 - Counter sizes automatically scale based on N and M parameters using `$clog2()`
 
-
-## Acknowledgments
-
-[Any acknowledgments]
